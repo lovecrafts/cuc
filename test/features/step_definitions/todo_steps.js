@@ -9,5 +9,5 @@ When('I add {string}', async function (string) {
 });
 
 Then('the text of the last todo should be {string}', async function (string) {
-    assert.equal(this.TodoPage.lastTodo.getText(), string);
+    assert.equal(this.TodoPage.recentEntry.getText(), string);
 });
