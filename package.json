@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "chai": "^4.1.2",
     "cucumber": "^4.0.0",
     "webdriverio": "^4.10.2"
   },
