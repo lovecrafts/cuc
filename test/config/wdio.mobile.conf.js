@@ -40,41 +40,40 @@ exports.config = {
          clearSystemFiles: true,
          //commandTimeout: '7200',
          //app: APP_PATH
+     },
+     {
+         appiumVersion: '1.7.2',
+         automationName: 'Appium',
+         platformName: 'Android',
+         //platformVersion: '9.0',
+         avd: 'Pixel_API_27',
+         deviceName: 'Android Emulator',
+         //deviceName: 'iPhone 6s',
+         browserName: 'chrome',
+         // chromeOptions: {
+         //   androidPackage: 'com.android.chrome',
+         // },
+         //setDebugApp: '--persistent com.android.chrome',
+         chromeOptions: {
+             args: ['--no-managed-user-acknowledgment-check', '--no-user-gesture-required', '--oobe-force-show-screen ⊗']
+         },
+         //orientation: 'PORTRAIT',
+         //nativeInstrumentsLib: true,
+         //isolateSimDevice: true,
+         //clearSystemFiles: true,
+         //app: APP_PATH
+         commandTimeout: '7200',
+         noReset: false,
+         //show_on_first_run_allowed: false,
+         dontStopAppOnReset: false,
+         show_on_first_run_allowed : false,
+         show_welcome_page: false,
+         appActivity: '.MainActivity',
+         appWaitActivity: 'SplashActivity',
+         noSign: true,
+         // intentCategory: 'android.intent.category.APP_CONTACTS',
+         // intentAction: 'android.intent.action.MAIN',
      }],
-
-    /*capabilities: [{
-        appiumVersion: '1.6.5',
-        automationName: 'Appium',
-        platformName: 'Android',
-        //platformVersion: '9.0',
-        deviceName: 'Android Emulator',
-        //deviceName: 'iPhone 6s',
-        browserName: 'chrome',
-        // chromeOptions: {
-        //   androidPackage: 'com.android.chrome',
-        // },
-        //setDebugApp: '--persistent com.android.chrome',
-        chromeOptions: {
-            args: ['--no-managed-user-acknowledgment-check', '--no-user-gesture-required', '--oobe-force-show-screen ⊗']
-        },
-        //orientation: 'PORTRAIT',
-        //nativeInstrumentsLib: true,
-        //isolateSimDevice: true,
-        //clearSystemFiles: true,
-        //app: APP_PATH
-        commandTimeout: '7200',
-        noReset: false,
-        //show_on_first_run_allowed: false,
-        dontStopAppOnReset: false,
-        show_on_first_run_allowed : false,
-        show_welcome_page: false,
-        appActivity: '.MainActivity',
-        appWaitActivity: 'SplashActivity',
-        noSign: true,
-        // intentCategory: 'android.intent.category.APP_CONTACTS',
-        // intentAction: 'android.intent.action.MAIN',
-    }],*/
-
 
     host: '127.0.0.1',
     port: '4723',
@@ -85,7 +84,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'http://10.0.2.2:3000',
     waitforTimeout: 90000,            // Default timeout for all waitFor* commands.
     connectionRetryTimeout: 90000,    // Default timeout in milliseconds for request  if Selenium Grid doesn't send response
     connectionRetryCount: 3,          // Default request retries count
@@ -134,15 +133,9 @@ exports.config = {
     //
     // Gets executed before test execution begins. At this point you can access all global
     // variables, such as `browser`. It is the perfect place to define custom commands.
-    before: function() {
-        /**
-         * Setup the Chai assertion framework
-         */
-        const chai    = require('chai');
-        global.expect = chai.expect;
-        global.assert = chai.assert;
-        global.should = chai.should();
-    },
+    //before: function() {
+    //   //do your stuff
+    //},
     //
     // after: function (capabilities, specs) {
     //   //do your stuff
