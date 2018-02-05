@@ -1,3 +1,6 @@
-./node_modules
-./test/reports
-./appium.log
+.idea/
+appium.log
+errorShots/
+node_modules/
+test/reports/
+test/screenshots/
