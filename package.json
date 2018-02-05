@@ -11,6 +11,7 @@
     "chai": "^3",
     "chromedriver": "^2.35.0",
     "cucumber": "^4.0.0",
+    "magento-nodejs": "0.0.8",
     "path": "^0.12.7",
     "wdio-appium-service": "^0.2.3",
     "wdio-chromedriver-service": "^0.1.2",
