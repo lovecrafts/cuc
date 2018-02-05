@@ -1,35 +1,32 @@
 const path = require('path');
 const VRC = require('wdio-visual-regression-service/compare');
-const util = require('util');
 require('dotenv').config();
 
-const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 90000;
+const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 20000;
 
 
-const getScreenshotName = (basePath) => {
-    return context => {
-        let type = context.type;
-        let browserVersion = parseInt(context.browser.version, 10);
-        let browserName = context.browser.name;
-        let browserViewPort = context.meta.viewport;
-        let browserWidth = browserViewPort.width;
-        let browserHeight = browserViewPort.height;
+const getScreenshotName = basePath => (context) => {
+  const type = context.type;
+  const browserVersion = parseInt(context.browser.version, 10);
+  const browserName = context.browser.name;
+  const browserViewPort = context.meta.viewport;
+  const browserWidth = browserViewPort.width;
+  const browserHeight = browserViewPort.height;
 
-        return path.join(basePath, `${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`);
-    }
+  return path.join(basePath, `${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`);
 };
 
 const VRCPath = 'test/screenshots';
 
 const VRCSaveScreen = new VRC.SaveScreenshot({
-    screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
+  screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`))
 });
 
 const VRCLocalCompare = new VRC.LocalCompare({
-    referenceName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
-    screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/screen`)),
-    diffName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/diff`)),
-    misMatchTolerance: 0.01,
+  referenceName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
+  screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/screen`)),
+  diffName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/diff`)),
+  misMatchTolerance: 0.01
 });
 
 const VRCMethod = process.env.VRC ? VRCSaveScreen : VRCLocalCompare;
@@ -44,13 +41,13 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: [
-        './test/features/**/*.feature'
-    ],
+  specs: [
+    './test/features/**/*.feature'
+  ],
     // Patterns to exclude.
-    exclude: [
+  exclude: [
         // 'path/to/excluded/files'
-    ],
+  ],
     //
     // ============
     // Capabilities
@@ -67,20 +64,20 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+  maxInstances: 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
+  capabilities: [{
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 5,
+    maxInstances: 5,
         //
-        browserName: 'chrome'
-    }],
+    browserName: 'chrome'
+  }],
     //
     // ===================
     // Test Configurations
@@ -90,39 +87,38 @@ exports.config = {
     // By default WebdriverIO commands are executed in a synchronous way using
     // the wdio-sync package. If you still want to run your tests in an async way
     // e.g. using promises you can set the sync option to false.
-    sync: true,
+  sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'silent',
+  logLevel: 'silent',
     //
     // Enables colors for log output.
-    coloredLogs: true,
+  coloredLogs: true,
     //
     // Warns when a deprecated command is used
-    deprecationWarnings: true,
+  deprecationWarnings: true,
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
-    bail: 0,
+  bail: 0,
     //
     // Saves a screenshot to a given path if a command fails.
-    screenshotPath: './errorShots/',
+  screenshotPath: './errorShots/',
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: '${BASE_URL}',
-    //
+  baseUrl: '${BASE_URL}',
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+  waitforTimeout: defaultTimeoutInterval,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
-    connectionRetryTimeout: 90000,
+  connectionRetryTimeout: 90000,
     //
     // Default request retries count
-    connectionRetryCount: 3,
+  connectionRetryCount: 3,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as properties. Make sure you have
@@ -131,7 +127,7 @@ exports.config = {
     // WebdriverCSS: https://github.com/webdriverio/webdrivercss
     // WebdriverRTC: https://github.com/webdriverio/webdriverrtc
     // Browserevent: https://github.com/webdriverio/browserevent
-    plugins: {
+  plugins: {
     //     webdrivercss: {
     //         screenshotRoot: 'my-shots',
     //         failedComparisonsRoot: 'diffs',
@@ -140,20 +136,20 @@ exports.config = {
     //     },
     //     webdriverrtc: {},
     //     browserevent: {}
-        'wdio-screenshot': {}
-    },
+    'wdio-screenshot': {}
+  },
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['selenium-standalone', 'visual-regression'],
-    visualRegression: {
-        compare: VRCMethod,
-        //viewportChangePause: 300,
-        //viewports: [{ width: 1024, height: 768 }],
-        //orientations: ['landscape', 'portrait'],
-    },
+  services: ['selenium-standalone', 'visual-regression'],
+  visualRegression: {
+    compare: VRCMethod
+        // viewportChangePause: 300,
+        // viewports: [{ width: 1024, height: 768 }],
+        // orientations: ['landscape', 'portrait'],
+  },
     //
     //
     // Framework you want to run your specs with.
@@ -162,30 +158,30 @@ exports.config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'cucumber',
+  framework: 'cucumber',
     //
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/reporters/dot.html
-    reporters: ['spec'],
+  reporters: ['spec'],
     //
     // If you are using Cucumber you need to specify the location of your step definitions.
-    cucumberOpts: {
-        require: ['./test/features/step_definitions/steps', './test/features/support/world'],        // <string[]> (file/dir) require files before executing features
-        backtrace: false,   // <boolean> show full backtrace for errors
-        compiler: [],       // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
-        dryRun: false,      // <boolean> invoke formatters without executing steps
-        failFast: false,    // <boolean> abort the run on first failure
-        format: [], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
-        colors: true,       // <boolean> disable colors in formatter output
-        snippets: true,     // <boolean> hide step definition snippets for pending steps
-        source: true,       // <boolean> hide source uris
-        profile: [],        // <string[]> (name) specify the profile to use
-        strict: false,      // <boolean> fail if there are any undefined or pending steps
-        tags: ['@wip'],           // <string[]> (expression) only execute the features or scenarios with tags matching the expression
-        timeout: 20000,     // <number> timeout for step definitions
-        ignoreUndefinedDefinitions: false, // <boolean> Enable this config to treat undefined definitions as warnings.
-    },
+  cucumberOpts: {
+    require: ['./test/features/step_definitions/steps', './test/features/support/world'],        // <string[]> (file/dir) require files before executing features
+    backtrace: false,   // <boolean> show full backtrace for errors
+    compiler: [],       // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    dryRun: false,      // <boolean> invoke formatters without executing steps
+    failFast: false,    // <boolean> abort the run on first failure
+    format: [], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
+    colors: true,       // <boolean> disable colors in formatter output
+    snippets: true,     // <boolean> hide step definition snippets for pending steps
+    source: true,       // <boolean> hide source uris
+    profile: [],        // <string[]> (name) specify the profile to use
+    strict: false,      // <boolean> fail if there are any undefined or pending steps
+    tags: ['@wip'],           // <string[]> (expression) only execute the features or scenarios with tags matching the expression
+    timeout: defaultTimeoutInterval,     // <number> timeout for step definitions
+    ignoreUndefinedDefinitions: false // <boolean> Enable this config to treat undefined definitions as warnings.
+  }
 
     //
     // =====
@@ -202,7 +198,7 @@ exports.config = {
      */
     // onPrepare: function (config, capabilities) {
     //
-    //},
+    // },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
@@ -227,7 +223,7 @@ exports.config = {
      */
     // beforeCommand: function (commandName, args) {
     // },
-    
+
     /**
      * Runs before a Cucumber feature
      * @param {Object} feature feature details
@@ -264,7 +260,7 @@ exports.config = {
      */
     // afterFeature: function (feature) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {String} commandName hook command name
@@ -299,4 +295,4 @@ exports.config = {
      */
     // onComplete: function(exitCode, config, capabilities) {
     // }
-}
+};

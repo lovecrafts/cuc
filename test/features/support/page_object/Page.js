@@ -1,8 +1,8 @@
-module.exports =  class Page {
-    constructor() {
-    }
+module.exports = class Page {
+  constructor() {
+  }
 
-    open(path) {
-        browser.url(path);
-    }
+  open(path) {
+    browser.url(path);
+  }
 };
