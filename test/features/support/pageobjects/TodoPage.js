@@ -1,5 +1,10 @@
 const Page =  require('./Page');
 
+function assertDiff(results) {
+    results.forEach((result) => assert.ok(result.isExactSameImage));
+}
+
+
 module.exports = class TodoPage extends Page {
 
     get input() {
@@ -20,8 +25,10 @@ module.exports = class TodoPage extends Page {
     }
 
     addTodo(text) {
-        this.input.setValue(text)
-        this.submit.click()
+        this.input.setValue(text);
+        let submit = this.submit;
+        const report = browser.checkElement(this.submit.selector);
+        submit.click();
+        assertDiff(report);
     }
-
 }

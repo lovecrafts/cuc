@@ -1,6 +1,39 @@
+const path = require('path');
+const VRC = require('wdio-visual-regression-service/compare');
+const util = require('util');
+
 const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 90000;
+
+
+const getScreenshotName = (basePath) => {
+    return context => {
+        let type = context.type;
+        let browserVersion = parseInt(context.browser.version, 10);
+        let browserName = context.browser.name;
+        let browserViewPort = context.meta.viewport;
+        let browserWidth = browserViewPort.width;
+        let browserHeight = browserViewPort.height;
+
+        return path.join(basePath, `${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`);
+    }
+};
+
+const VRCPath = 'test/screenshots';
+
+const VRCSaveScreen = new VRC.SaveScreenshot({
+    screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
+});
+
+const VRCLocalCompare = new VRC.LocalCompare({
+    referenceName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
+    screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/screen`)),
+    diffName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/diff`)),
+    misMatchTolerance: 0.01,
+});
+
+const VRCMethod = process.env.VRC ? VRCSaveScreen : VRCLocalCompare;
 exports.config = {
-    
+
     //
     // ==================
     // Specify Test Files
@@ -97,7 +130,7 @@ exports.config = {
     // WebdriverCSS: https://github.com/webdriverio/webdrivercss
     // WebdriverRTC: https://github.com/webdriverio/webdriverrtc
     // Browserevent: https://github.com/webdriverio/browserevent
-    // plugins: {
+    plugins: {
     //     webdrivercss: {
     //         screenshotRoot: 'my-shots',
     //         failedComparisonsRoot: 'diffs',
@@ -106,13 +139,21 @@ exports.config = {
     //     },
     //     webdriverrtc: {},
     //     browserevent: {}
-    // },
+        'wdio-screenshot': {}
+    },
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['selenium-standalone'],
+    services: ['selenium-standalone', 'visual-regression'],
+    visualRegression: {
+        compare: VRCMethod,
+        //viewportChangePause: 300,
+        //viewports: [{ width: 1024, height: 768 }],
+        //orientations: ['landscape', 'portrait'],
+    },
+    //
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -144,7 +185,7 @@ exports.config = {
         timeout: 20000,     // <number> timeout for step definitions
         ignoreUndefinedDefinitions: false, // <boolean> Enable this config to treat undefined definitions as warnings.
     },
-    
+
     //
     // =====
     // Hooks
@@ -159,7 +200,8 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     // onPrepare: function (config, capabilities) {
-    // },
+    //
+    //},
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.

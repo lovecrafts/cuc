@@ -1,15 +1,17 @@
 {
   "scripts": {
-    "postinstall": "./node_modules/.bin/appium-doctor",
+    "postinstall": "node ./node_modules/.bin/appium-doctor",
     "test": "node node_modules/.bin/wdio ./test/config/wdio.web.conf.js",
+    "test:refer": "VRC=true node node_modules/.bin/wdio ./test/config/wdio.web.conf.js",
     "test-mobile": "node node_modules/.bin/wdio ./test/config/wdio.mobile.conf.js"
   },
   "devDependencies": {
     "appium": "^1.7.2",
     "appium-doctor": "^1.4.3",
-    "chai": "^4.1.2",
+    "chai": "^3",
     "chromedriver": "^2.35.0",
     "cucumber": "^4.0.0",
+    "path": "^0.12.7",
     "wdio-appium-service": "^0.2.3",
     "wdio-chromedriver-service": "^0.1.2",
     "wdio-cucumber-framework": "^1.1.0",
