@@ -1,6 +1,5 @@
 Feature: Todo
 
-  @wip
   Scenario: Create Todo
     Given there is already 1 todo
     When I add "buy milk"
