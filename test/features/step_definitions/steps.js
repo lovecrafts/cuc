@@ -1,6 +1,7 @@
+/* eslint func-names: ["error", "never"] */
 const { Given, When, Then } = require('cucumber');
 
-Given('there is already {int} todo', async function (int = 0) {
+Given('there is already {int} todo', async function (int) {
   await this.TodoPage.open();
 });
 
@@ -14,5 +15,4 @@ Then('the text of the last todo should be {string}', async function (string) {
 
 Given('I am an anon user', async function () {
   this.User = await new this.User();
-  console.log(this.User);
 });

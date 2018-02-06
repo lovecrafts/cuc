@@ -1,3 +1,4 @@
+/* eslint class-methods-use-this: 0 */
 const Page = require('./Page');
 
 function assertDiff(results) {

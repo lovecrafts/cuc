@@ -1,8 +1,15 @@
 {
-  "parser": "babel-eslint",
   "extends": "airbnb",
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
-    "comma-dangle": ["error", "never"]
-  }
+    max-len: [
+      "error", { "ignoreComments": true , "ignoreTrailingComments": true }
+    ]
+  },
+  "globals": {
+      "browser": true,
+      "assert": true,
+    },
+  "env": {
+      "es6": true,
+    }
 }

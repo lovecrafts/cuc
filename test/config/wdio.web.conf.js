@@ -6,27 +6,35 @@ const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 20000;
 
 
 const getScreenshotName = basePath => (context) => {
-  const type = context.type;
   const browserVersion = parseInt(context.browser.version, 10);
   const browserName = context.browser.name;
   const browserViewPort = context.meta.viewport;
   const browserWidth = browserViewPort.width;
   const browserHeight = browserViewPort.height;
 
-  return path.join(basePath, `${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`);
+  return path.join(
+    basePath,
+    `${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`,
+  );
 };
 
 const VRCPath = 'test/screenshots';
 
 const VRCSaveScreen = new VRC.SaveScreenshot({
-  screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`))
+  screenshotName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/reference`),
+  ),
 });
 
 const VRCLocalCompare = new VRC.LocalCompare({
-  referenceName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/reference`)),
-  screenshotName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/screen`)),
+  referenceName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/reference`),
+  ),
+  screenshotName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/screen`),
+  ),
   diffName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/diff`)),
-  misMatchTolerance: 0.01
+  misMatchTolerance: 0.01,
 });
 
 const VRCMethod = process.env.VRC ? VRCSaveScreen : VRCLocalCompare;
@@ -42,7 +50,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
   specs: [
-    './test/features/**/*.feature'
+    './test/features/**/*.feature',
   ],
     // Patterns to exclude.
   exclude: [
@@ -76,7 +84,7 @@ exports.config = {
         // 5 instances get started at a time.
     maxInstances: 5,
         //
-    browserName: 'chrome'
+    browserName: 'chrome',
   }],
     //
     // ===================
@@ -109,7 +117,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-  baseUrl: '${BASE_URL}',
+  baseUrl: process.env.BASE_URL,
     // Default timeout for all waitFor* commands.
   waitforTimeout: defaultTimeoutInterval,
     //
@@ -136,7 +144,7 @@ exports.config = {
     //     },
     //     webdriverrtc: {},
     //     browserevent: {}
-    'wdio-screenshot': {}
+    'wdio-screenshot': {},
   },
     //
     // Test runner services
@@ -145,7 +153,7 @@ exports.config = {
     // commands. Instead, they hook themselves up into the test process.
   services: ['selenium-standalone', 'visual-regression'],
   visualRegression: {
-    compare: VRCMethod
+    compare: VRCMethod,
         // viewportChangePause: 300,
         // viewports: [{ width: 1024, height: 768 }],
         // orientations: ['landscape', 'portrait'],
@@ -167,7 +175,10 @@ exports.config = {
     //
     // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
-    require: ['./test/features/step_definitions/steps', './test/features/support/world'],        // <string[]> (file/dir) require files before executing features
+    require: [
+      './test/features/step_definitions/steps',
+      './test/features/support/world',
+    ],        // <string[]> (file/dir) require files before executing features
     backtrace: false,   // <boolean> show full backtrace for errors
     compiler: [],       // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     dryRun: false,      // <boolean> invoke formatters without executing steps
@@ -180,8 +191,8 @@ exports.config = {
     strict: false,      // <boolean> fail if there are any undefined or pending steps
     tags: ['@wip'],           // <string[]> (expression) only execute the features or scenarios with tags matching the expression
     timeout: defaultTimeoutInterval,     // <number> timeout for step definitions
-    ignoreUndefinedDefinitions: false // <boolean> Enable this config to treat undefined definitions as warnings.
-  }
+    ignoreUndefinedDefinitions: false, // <boolean> Enable this config to treat undefined definitions as warnings.
+  },
 
     //
     // =====

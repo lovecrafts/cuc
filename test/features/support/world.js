@@ -2,7 +2,7 @@ const { setWorldConstructor } = require('cucumber');
 const TodoPage = require('./page_object/TodoPage');
 const User = require('./user_object/user');
 
-chai = require('chai');
+const chai = require('chai');
 
 global.assert = chai.assert;
 global.expect = chai.expect;
