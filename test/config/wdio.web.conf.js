@@ -1,9 +1,8 @@
+require('dotenv').config();
 const path = require('path');
 const VRC = require('wdio-visual-regression-service/compare');
-require('dotenv').config();
 
-const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 20000;
-
+const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 90000;
 
 const getScreenshotName = basePath => (context) => {
   const browserVersion = parseInt(context.browser.version, 10);
@@ -38,6 +37,7 @@ const VRCLocalCompare = new VRC.LocalCompare({
 });
 
 const VRCMethod = process.env.VRC ? VRCSaveScreen : VRCLocalCompare;
+
 exports.config = {
 
     //

@@ -1,4 +1,39 @@
-const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 20000;
+require('dotenv').config();
+const defaultTimeoutInterval = process.env.DEBUG ? (60 * 60 * 500) : 90000;
+const path = require('path');
+const VRC = require('wdio-visual-regression-service/compare');
+
+const getScreenshotName = basePath => (context) => {
+  const browserVersion = parseInt(context.browser.version, 10);
+  const browserName = context.browser.name;
+
+  return path.join(
+    basePath,
+    `${browserName}_${browserVersion}.png`,
+  );
+};
+
+const VRCPath = 'test/screenshots';
+
+const VRCSaveScreen = new VRC.SaveScreenshot({
+  screenshotName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/reference`),
+  ),
+});
+
+const VRCLocalCompare = new VRC.LocalCompare({
+  referenceName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/reference`),
+  ),
+  screenshotName: getScreenshotName(
+    path.join(process.cwd(), `${VRCPath}/screen`),
+  ),
+  diffName: getScreenshotName(path.join(process.cwd(), `${VRCPath}/diff`)),
+  misMatchTolerance: 0.01,
+});
+
+const VRCMethod = process.env.VRC ? VRCSaveScreen : VRCLocalCompare;
+
 exports.config = {
 
   specs: [
@@ -26,58 +61,60 @@ exports.config = {
     //
   maxInstances: 1,
 
-  capabilities: [{
-    appiumVersion: '1.7.2',
-    automationName: 'XCUITest',
-    platformName: 'iOS',
-         // platformVersion: '9.0',
-    deviceName: 'iPhone Simulator',
-         // deviceName: 'iPhone 6s',
-    browserName: 'Safari',
-         // orientation: 'PORTRAIT',
-         // nativeInstrumentsLib: true,
-         // isolateSimDevice: true,
-    clearSystemFiles: true,
-         // commandTimeout: '7200',
-         // app: APP_PATH
-  },
-  {
-    appiumVersion: '1.7.2',
-    automationName: 'Appium',
-    platformName: 'Android',
-         // platformVersion: '9.0',
-    avd: 'Pixel_API_27',
-    deviceName: 'Android Emulator',
-         // deviceName: 'iPhone 6s',
-    browserName: 'chrome',
-         // chromeOptions: {
-         //   androidPackage: 'com.android.chrome',
-         // },
-         // setDebugApp: '--persistent com.android.chrome',
-    chromeOptions: {
-      args: [
-        '--no-managed-user-acknowledgment-check',
-        '--no-user-gesture-required',
-        '--oobe-force-show-screen ⊗',
-      ],
+  capabilities: [
+    {
+      appiumVersion: '1.7.2',
+      automationName: 'XCUITest',
+      platformName: 'iOS',
+           // platformVersion: '9.0',
+      deviceName: 'iPhone Simulator',
+           // deviceName: 'iPhone 6s',
+      browserName: 'Safari',
+           // orientation: 'PORTRAIT',
+           // nativeInstrumentsLib: true,
+           // isolateSimDevice: true,
+      clearSystemFiles: true,
+            commandTimeout: '7200',
+           // app: APP_PATH
     },
-         // orientation: 'PORTRAIT',
-         // nativeInstrumentsLib: true,
-         // isolateSimDevice: true,
-         // clearSystemFiles: true,
-         // app: APP_PATH
-    commandTimeout: '7200',
-    noReset: false,
-         // show_on_first_run_allowed: false,
-    dontStopAppOnReset: false,
-    show_on_first_run_allowed: false,
-    show_welcome_page: false,
-    appActivity: '.MainActivity',
-    appWaitActivity: 'SplashActivity',
-    noSign: true,
-         // intentCategory: 'android.intent.category.APP_CONTACTS',
-         // intentAction: 'android.intent.action.MAIN',
-  }],
+    {
+      appiumVersion: '1.7.2',
+      automationName: 'Appium',
+      platformName: 'Android',
+           // platformVersion: '9.0',
+      avd: 'Nexus_S_API_27',
+      deviceName: 'Android Emulator',
+           // deviceName: 'iPhone 6s',
+      browserName: 'chrome',
+           // chromeOptions: {
+           //   androidPackage: 'com.android.chrome',
+           // },
+           // setDebugApp: '--persistent com.android.chrome',
+      chromeOptions: {
+        args: [
+          '--no-managed-user-acknowledgment-check',
+          '--no-user-gesture-required',
+          '--oobe-force-show-screen ⊗',
+        ],
+      },
+           // orientation: 'PORTRAIT',
+           // nativeInstrumentsLib: true,
+           // isolateSimDevice: true,
+           // clearSystemFiles: true,
+           // app: APP_PATH
+      commandTimeout: '7200',
+      noReset: false,
+           // show_on_first_run_allowed: false,
+      dontStopAppOnReset: false,
+      show_on_first_run_allowed: false,
+      show_welcome_page: false,
+      appActivity: '.MainActivity',
+      appWaitActivity: 'SplashActivity',
+      noSign: true,
+           // intentCategory: 'android.intent.category.APP_CONTACTS',
+           // intentAction: 'android.intent.action.MAIN',
+    }
+],
 
   host: '127.0.0.1',
   port: '4723',
@@ -88,16 +125,33 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-  baseUrl: 'http://10.0.2.2:3000',
+  baseUrl: process.env.BASE_URL,
   waitforTimeout: defaultTimeoutInterval,            // Default timeout for all waitFor* commands.
   connectionRetryTimeout: 90000,    // Default timeout in milliseconds for request  if Selenium Grid doesn't send response
   connectionRetryCount: 3,          // Default request retries count
-
+  plugins: {
+    //     webdrivercss: {
+    //         screenshotRoot: 'my-shots',
+    //         failedComparisonsRoot: 'diffs',
+    //         misMatchTolerance: 0.05,
+    //         screenWidth: [320,480,640,1024]
+    //     },
+    //     webdriverrtc: {},
+    //     browserevent: {}
+    'wdio-screenshot': {},
+  },
+    //
+    // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    //
-  services: ['appium'],
+  services: ['appium', 'visual-regression'],
+  visualRegression: {
+    compare: VRCMethod,
+        // viewportChangePause: 300,
+        // viewports: [{ width: 1024, height: 768 }],
+        // orientations: ['landscape', 'portrait'],
+  },
     //
   framework: 'cucumber',
   reporters: ['spec'],

@@ -6,7 +6,7 @@
     "test-mobile": "node node_modules/.bin/wdio ./test/config/wdio.mobile.conf.js",
     "cuce": "node node_modules/.bin/cucumber-js ./test/features/ --format-options '{\"snippetInterface\": \"async-await\"}'",
     "lint": "node node_modules/.bin/eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "node node_modules/.bin/eslint --fix ."
   },
   "devDependencies": {
     "appium": "^1.7.2",
